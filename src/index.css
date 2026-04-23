@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Silkscreen&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "VT323", monospace;
+  --font-mono: "Silkscreen", monospace;
+  
+  --color-cyan: #00ffff;
+  --color-magenta: #ff00ff;
+  --color-void: #030005;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--color-void)] text-cyan overflow-hidden uppercase;
+  }
+}
+
+@layer components {
+  .brutal-border {
+    @apply border-2 border-cyan shadow-[4px_4px_0px_#ff00ff];
+  }
+  .brutal-border-magenta {
+    @apply border-2 border-magenta shadow-[-4px_-4px_0px_#00ffff];
+  }
+  
+  /* Glitch Text Effect */
+  .glitch {
+    position: relative;
+    color: var(--color-cyan);
+    mix-blend-mode: screen;
+  }
+  
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+  
+  .glitch::before {
+    left: 4px;
+    text-shadow: -4px 0 var(--color-magenta);
+    clip-path: polygon(0 0, 100% 0, 100% 25%, 0 25%);
+    animation: glitch-anim-1 2.5s infinite linear alternate-reverse;
+  }
+  
+  .glitch::after {
+    left: -4px;
+    text-shadow: -4px 0 var(--color-cyan);
+    color: var(--color-magenta);
+    clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  }
+
+  /* Static Noise Overlay */
+  .noise-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+  }
+
+  .screen-tear {
+    animation: tear-anim 4s infinite step-end;
+  }
+}
+
+@keyframes glitch-anim-1 {
+  0% { clip-path: polygon(0 20%, 100% 20%, 100% 30%, 0 30%); transform: translate(-2px, 2px); }
+  20% { clip-path: polygon(0 60%, 100% 60%, 100% 65%, 0 65%); transform: translate(2px, -2px); }
+  40% { clip-path: polygon(0 40%, 100% 40%, 100% 50%, 0 50%); transform: translate(-2px, 0); }
+  60% { clip-path: polygon(0 80%, 100% 80%, 100% 85%, 0 85%); transform: translate(4px, 2px); }
+  80% { clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%); transform: translate(-4px, -2px); }
+  100% { clip-path: polygon(0 70%, 100% 70%, 100% 80%, 0 80%); transform: translate(2px, 2px); }
+}
+
+@keyframes glitch-anim-2 {
+  0% { clip-path: polygon(0 15%, 100% 15%, 100% 25%, 0 25%); transform: translate(2px, -2px); }
+  20% { clip-path: polygon(0 70%, 100% 70%, 100% 75%, 0 75%); transform: translate(-2px, 2px); }
+  40% { clip-path: polygon(0 30%, 100% 30%, 100% 45%, 0 45%); transform: translate(4px, -2px); }
+  60% { clip-path: polygon(0 85%, 100% 85%, 100% 90%, 0 90%); transform: translate(-4px, 0); }
+  80% { clip-path: polygon(0 5%, 100% 5%, 100% 20%, 0 20%); transform: translate(2px, 2px); }
+  100% { clip-path: polygon(0 50%, 100% 50%, 100% 60%, 0 60%); transform: translate(-2px, -2px); }
+}
+
+@keyframes tear-anim {
+  0% { transform: translateX(0); }
+  15% { transform: translateX(-10px) skewX(20deg); filter: hue-rotate(90deg); }
+  16% { transform: translateX(10px) skewX(-20deg); filter: hue-rotate(-90deg); }
+  17% { transform: translateX(0) skewX(0); filter: none; }
+  100% { transform: translateX(0); }
+}
+
+/* Custom scrollbar for raw terminal vibes */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-void border-l border-magenta;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-cyan border border-magenta;
+}
+
